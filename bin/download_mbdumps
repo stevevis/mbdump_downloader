@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
+require 'optparse'
 require 'mbdump_downloader'
 
-MBDumpDownloader.download_dumps
+MBDumpDownloader.download_dumps ARGV.first

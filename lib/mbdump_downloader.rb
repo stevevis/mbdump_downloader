@@ -6,7 +6,7 @@ require 'mbdump_downloader/config'
 # musicbrainz.download_to in config.yml.
 #
 module MBDumpDownloader
-  def self.download_dumps
+  def self.download_dumps(last_downloaded)
     ftp = Net::FTP.new(MBDumpDownloader::FTP_SERVER)
     ftp.login
     ftp.passive = true
@@ -16,6 +16,11 @@ module MBDumpDownloader
     latest = /latest-is-(.*)/.match(files[0])[1]
     puts "Found latest: #{latest}"
 
+    if last_downloaded == latest
+      puts 'Skipping download since latest has not changed'
+      return
+    end
+
     download_dir = MBDumpDownloader::DOWNLOAD_TO
     Dir.mkdir(download_dir) unless File.exist?(download_dir)
 
@@ -23,13 +28,16 @@ module MBDumpDownloader
     MBDumpDownloader::DOWNLOAD_FILES.each do |file|
       # Skip if file already exists
       existing_file = File.join(download_dir, file)
-      next if File.exist?(existing_file)
+      if File.exist?(existing_file)
+        puts "Skipping #{file} because it already exists at #{download_dir}"
+        next
+      end
 
       file_size = ftp.size(file)
       one_mb = 1024 * 1024
       downloaded = 0
 
-      puts "Trying to download #{file} (#{file_size / one_mb}mb) to #{download_dir}"
+      puts "Downloading #{file} (#{file_size / one_mb}mb) to #{download_dir}"
 
       ftp.getbinaryfile(file, "#{download_dir}/#{file}", one_mb) do
         downloaded += one_mb

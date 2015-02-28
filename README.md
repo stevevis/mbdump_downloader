@@ -23,3 +23,11 @@ Or install it yourself as:
 Run from source with:
 
     $ bundle exec download_mbdumps
+
+Or if you've installed the gem locally just run:
+
+    $ download_mbdumps
+
+If you would like to only download new dumps, pass in the ID of the last dump you downloaded:
+
+    $ download_mbdumps 20150225-002259
