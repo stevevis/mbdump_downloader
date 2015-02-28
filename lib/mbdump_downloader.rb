@@ -14,7 +14,7 @@ module MBDumpDownloader
     ftp.chdir(MBDumpDownloader::DATABASE_DIR)
     files = ftp.list('latest-is-*')
     latest = /latest-is-(.*)/.match(files[0])[1]
-    puts "Found latest: #{latest}"
+    puts "Latest #{latest}"
 
     if last_downloaded == latest
       puts 'Skipping download since latest has not changed'
