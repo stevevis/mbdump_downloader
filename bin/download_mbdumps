@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require 'mbdump_downloader'
+
+MBDumpDownloader.download_dumps
